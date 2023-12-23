@@ -1,35 +1,22 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+//import { useEffect } from "react";
+//import { useState } from "react";
 import { Link } from "react-router-dom";
-
+const fetchProducts = async () => {
+    const response = await fetch("https://dummyjson.com/products");
+    const data = await response.json();
+    return data.products;
+}
 
 const Products = () => {
-    const [products, setProducts] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    useEffect(() => {
-        const fetchProducts = async () => {
-            setIsLoading(true);
-            setError(null);
-            try {
-                const response = await fetch("https://dummyjson.com/products");
-                const data = await response.json();
-                setProducts(data.products);
-                setIsLoading(false);
-            } catch (err) {
-                setError(err.message);
-                setIsLoading(false);
-            }
+    const { isLoading, error, data: products } = useQuery({ queryKey: ["products"], queryFn: fetchProducts, staleTime: 1000 });
 
-        };
-        fetchProducts();
-    }, []);
 
     if (isLoading) {
         return <h3>Loading ...</h3>;
     }
     if (error) {
-        return <h3>{error}</h3>
+        return <h3>{error.message}</h3>
     }
     return (<div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
