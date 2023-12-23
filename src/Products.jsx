@@ -9,7 +9,14 @@ const fetchProducts = async () => {
 }
 
 const Products = () => {
-    const { isLoading, error, data: products } = useQuery({ queryKey: ["products"], queryFn: fetchProducts, staleTime: 1000 });
+    const {
+        isLoading,
+        error,
+        data: products
+    } = useQuery({
+        queryKey: ["products"],
+        queryFn: fetchProducts
+    });
 
 
     if (isLoading) {
